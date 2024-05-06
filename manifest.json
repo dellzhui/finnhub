@@ -1,0 +1,10 @@
+{
+  "domain": "finnhub",
+  "name": "Finnhub",
+  "codeowners": [],
+  "documentation": "https://www.home-assistant.io/integrations/finnhub",
+  "iot_class": "cloud_polling",
+  "loggers": ["finnhub"],
+  "requirements": ["finnhub-python==2.4.19"],
+  "version": "0.1.1"
+}
