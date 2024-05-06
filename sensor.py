@@ -192,7 +192,6 @@ class FinnhubSensor(SensorEntity):
             
             if(alert_info != None):
                 _LOGGER.info('got alert info is {}'.format(alert_info))
-                await hass.bus.async_fire(EVENT_STATE_CHANGED, event_data, EventOrigin.local)
 
             self._attr_extra_state_attributes = ({
                 ATTR_HIGH: high,
