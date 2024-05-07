@@ -178,14 +178,12 @@ class FinnhubSensor(SensorEntity):
                 elif(high_52_week > 0 and current > high_52_week):
                     b_need_alert = True
                     alert_info = "{} is above 52 week high".format(self._symbol)
-                elif(low > 0 and current > low):
-                    if(current - low) / current * 100 >= self._attr_rising_threshold:
-                        b_need_alert = True
-                        alert_info = "{} is rising above {}%".format(self._symbol, self._attr_rising_threshold)
-                elif(current < high):
-                    if(high - current) / high * 100 >= self._attr_falling_threshold:
-                        b_need_alert = True
-                        alert_info = "{} is falling above {}%".format(self._symbol, self._attr_falling_threshold)
+                elif(low > 0 and current > low and ((current - low) / current * 100 >= self._attr_rising_threshold)):
+                    b_need_alert = True
+                    alert_info = "{} is rising above {}%".format(self._symbol, self._attr_rising_threshold)
+                elif(current < high and ((high - current) / high * 100 >= self._attr_falling_threshold)):
+                    b_need_alert = True
+                    alert_info = "{} is falling above {}%".format(self._symbol, self._attr_falling_threshold)
             
             if(b_need_alert):
                 self._attr_native_value = self.__get_today_start_timestamp()
