@@ -128,6 +128,9 @@ class FinnhubSensor(SensorEntity):
         _LOGGER.info('symbol is {}'.format(symbol))
         self._attr_rising_threshold: int = symbol[CONF_RISING_THRESHOLD]
         self._attr_falling_threshold: int = symbol[CONF_FALLING_THRESHOLD]
+        self._attr_stock_name = symbol.get(CONF_NAME, self._symbol)
+        if(self._attr_stock_name != None):
+            self._attr_stock_name = self._attr_stock_name.replace('Finnhub ', '')
 
     def update(self) -> None:
         """Get the latest data and updates the states."""
@@ -170,20 +173,18 @@ class FinnhubSensor(SensorEntity):
             if(current_time >= 930 and current_time <= 1600):
                 if(current > 0):
                     if(current < low_52_week):
-                        alert_info += "{} is below 52 week low. ".format(self._attr_name)
+                        alert_info += "{} is below 52 week low. ".format(self._attr_stock_name)
                     if(high_52_week > 0 and current > high_52_week):
-                        alert_info += "{} is above 52 week high. ".format(self._attr_name)
+                        alert_info += "{} is above 52 week high. ".format(self._attr_stock_name)
                     if(low > 0 and current > low and ((current - low) / current * 100 >= self._attr_rising_threshold)):
-                        alert_info += "{} is rising above {}%. ".format(self._attr_name, self._attr_rising_threshold)
+                        alert_info += "{} is rising above {}%. ".format(self._attr_stock_name, self._attr_rising_threshold)
                     if(current < high and ((high - current) / high * 100 >= self._attr_falling_threshold)):
-                        alert_info += "{} is falling above {}%. ".format(self._attr_name, self._attr_falling_threshold)
+                        alert_info += "{} is falling above {}%. ".format(self.v, self._attr_falling_threshold)
             
             if(alert_info != ''):
-                self._attr_native_value = str(datetime.now().strftime("%Y%m%d%H"))
-            
-            if(alert_info != None):
                 _LOGGER.info('got alert info is {}'.format(alert_info))
-
+                self._attr_native_value = str(datetime.now().strftime("%Y%m%d"))
+            
             self._attr_extra_state_attributes = ({
                 ATTR_HIGH: high,
                 ATTR_LOW: low,
@@ -197,7 +198,7 @@ class FinnhubSensor(SensorEntity):
                 ATTR_52_WEEK_LOW_DATE: low_52_week_date,
                 ATTR_52_WEEK_HIGH: high_52_week,
                 ATTR_52_WEEK_HIGH_DATE: high_52_week_date,
-                ATTR_ALERT_INFO: alert_info,
+                ATTR_ALERT_INFO: alert_info if(alert_info != '') else None,
                 ATTR_STOCK_TIME: report_time,
             })
         else:
