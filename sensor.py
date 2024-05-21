@@ -177,9 +177,9 @@ class FinnhubSensor(SensorEntity):
                     if(high_52_week > 0 and current > high_52_week):
                         alert_info += "{} is above 52 week high. ".format(self._attr_stock_name)
                     if(low > 0 and current > low and ((current - low) / current * 100 >= self._attr_rising_threshold)):
-                        alert_info += "{} is rising above {}%. ".format(self._attr_stock_name, self._attr_rising_threshold)
+                        alert_info += "{} is up more than {}%. ".format(self._attr_stock_name, self._attr_rising_threshold)
                     if(current < high and ((high - current) / high * 100 >= self._attr_falling_threshold)):
-                        alert_info += "{} is falling above {}%. ".format(self.v, self._attr_falling_threshold)
+                        alert_info += "{} is down more than {}%. ".format(self.v, self._attr_falling_threshold)
             
             if(alert_info != ''):
                 _LOGGER.info('got alert info is {}'.format(alert_info))
