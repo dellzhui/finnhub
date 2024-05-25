@@ -104,8 +104,6 @@ def setup_platform(
         _LOGGER.warning(msg)
         return
 
-    finnhub_client = finnhub.Client(api_key=api_key)
-
     dev: list[SensorEntity] = []
     for symbol in symbols:
         dev.append(FinnhubSensor(hass, api_key, symbol))
