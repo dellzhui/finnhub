@@ -172,10 +172,11 @@ class FinnhubSensor(SensorEntity):
                 current_timestamp = int(datetime.timestamp(datetime.now()))
                 if(timestamp != None and timestamp > 0 and current_timestamp >= timestamp and (current_timestamp - timestamp) < 3600):
                     if(current > 0):
-                        if(current < low_52_week):
-                            alert_info += "{} is below 52 week low. ".format(self._attr_stock_name)
-                        if(high_52_week > 0 and current > high_52_week):
-                            alert_info += "{} is above 52 week high. ".format(self._attr_stock_name)
+                        if(self._symbol != 'BRK.B'):
+                            if(current < low_52_week):
+                                alert_info += "{} is below 52 week low. ".format(self._attr_stock_name)
+                            if(high_52_week > 0 and current > high_52_week):
+                                alert_info += "{} is above 52 week high. ".format(self._attr_stock_name)
                         if(low > 0 and current > low and ((current - low) / current * 100 >= self._attr_rising_threshold)):
                             alert_info += "{} is up more than {}%. ".format(self._attr_stock_name, self._attr_rising_threshold)
                         if(current < high and ((high - current) / high * 100 >= self._attr_falling_threshold)):
