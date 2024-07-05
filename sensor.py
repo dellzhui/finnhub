@@ -48,6 +48,7 @@ CONF_SYMBOLS = "symbols"
 CONF_TO = "to"
 CONF_RISING_THRESHOLD = "rising_threshold"
 CONF_FALLING_THRESHOLD = "falling_threshold"
+CONF_CAP_PRICE_DOLLORE = "cap_price_dollors"
 
 ICONS = {
     "BTC": "mdi:currency-btc",
@@ -68,6 +69,7 @@ SYMBOL_SCHEMA = vol.Schema(
         vol.Optional(CONF_NAME): cv.string,
         vol.Optional(CONF_RISING_THRESHOLD): int,
         vol.Optional(CONF_FALLING_THRESHOLD): int,
+        vol.Optional(CONF_CAP_PRICE_DOLLORE): int,
     }
 )
 
@@ -126,6 +128,7 @@ class FinnhubSensor(SensorEntity):
         _LOGGER.info('symbol is {}'.format(symbol))
         self._attr_rising_threshold: int = symbol[CONF_RISING_THRESHOLD]
         self._attr_falling_threshold: int = symbol[CONF_FALLING_THRESHOLD]
+        self._attr_cap_price_dollors: int = symbol[CONF_CAP_PRICE_DOLLORE]
         self._attr_stock_name = symbol.get(CONF_NAME, self._symbol)
         if(self._attr_stock_name != None):
             self._attr_stock_name = self._attr_stock_name.replace('Finnhub ', '')
@@ -173,6 +176,8 @@ class FinnhubSensor(SensorEntity):
                 if(timestamp != None and timestamp > 0 and current_timestamp >= timestamp and (current_timestamp - timestamp) < 3600):
                     if(current > 0):
                         if(self._symbol != 'BRK.B'):
+                            if(self._attr_cap_price_dollors != -1 and current >= self._attr_cap_price_dollors):
+                                alert_info += "{}'s stock price reaches {} dollors. ".format(self._attr_stock_name, self._attr_cap_price_dollors)
                             if(current < low_52_week):
                                 alert_info += "{} is below 52 week low. ".format(self._attr_stock_name)
                             if(high_52_week > 0 and current > high_52_week):
