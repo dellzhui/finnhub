@@ -14,7 +14,7 @@ from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-import finnhub
+from finnhub import Client
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -137,7 +137,7 @@ class FinnhubSensor(SensorEntity):
         """Get the latest data and updates the states."""
         _LOGGER.debug("Requesting new data for symbol %s", self._symbol)
         
-        finnhub_client = finnhub.Client(api_key=self._api_key)
+        finnhub_client = Client(api_key=self._api_key)
         result = {}
         try:
             _LOGGER.debug("Configuring timeseries for symbols: %s", self._symbol)
